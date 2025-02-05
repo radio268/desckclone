@@ -16,13 +16,13 @@ This is a simplified Discord clone with a few differences:
 As an Admin:<br>
   Upload the SQL structure, and in the PHP script, modify the username and
   password for accessing the database. Then start creating users.
-  first autocreated acount username: admin password: test
-  ![db structure](images/db.bmp)
-As a User:
+  first autocreated acount username: admin password: test <br>
+  ![db structure](images/db.bmp)<br>
+As a User:<br>
   Ask someone to create an account for you, then use that username and
   password to log in (it is recommended to change the password afterward). Modify
   your server list if there are servers you were added to, or create your own server.
-  You can also add another user.
+  You can also add another user.<bbr>
   
 # How It Works
 There is an API that supports many actions, including:
@@ -37,4 +37,9 @@ it more useful.
 # How Does It Feel
 This is how the site normally looks, but it is recommended to modify the code and
 make it look better, as I am awful at designing frontends. Users themselves are
-also allowed to modify their frontend to make it work and look better.
+also allowed to modify their frontend to make it work and look better.<br>
+![db structure](images/login.bmp)<br>
+![db structure](images/window.bmp)<br>
+<br>
+<br>
+<br>
