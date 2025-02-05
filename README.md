@@ -2,14 +2,18 @@
 
 # Dokumentace
 ## About
+
 This is a simplified Discord clone with a few differences:
   1. No one controls the servers.
   2. You cannot simply delete stuff.
   3. Only logged-in accounts can create new accounts.
   4. It is easy to modify the code.
+  5. 
 # Requiraments
+
   PHP server MYsql DB
 #How to Use
+
 As an Admin:
   Upload the SQL structure, and in the PHP script, modify the username and
   password for accessing the database. Then start creating users.
