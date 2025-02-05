@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message API Tester</title>
+    <style>
+        /* Basic Reset */
+/* Basic styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #1c1c1c; /* Dark background */
+    color: #ffffff; /* Light text */
+}
+
+#l-sidebar {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 200px;
+    background-color: #1e1e1e; /* Dark background */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+    padding: 20px 10px;
+    justify-content: space-between;
+}
+
+#button-container {
+    padding-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+#bottom {
+    margin-top: auto;
+}
+
+#bottom a {
+    width: 180px;
+    height: 19px;
+    display: inline-block;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #007bff; /* Dark button color */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: center;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+#bottom a:hover {
+    background-color: #003064;
+}
+
+#logout_button {
+    width: 200px;
+    height: 39px;
+    margin-top: auto;
+    padding: 10px;
+    background-color: #ff5f5f;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#logout_button:hover {
+    background-color: #ff0000;
+}
+
+#l-sidebar button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #333333; /* Dark button background */
+    color: #ffffff; /* Light text */
+    border: 1px solid #555555; /* Dark border */
+    border-radius: 4px;
+}
+
+#l-sidebar button:hover {
+    background-color: #555555;
+}
+
+h1 {
+    color: #ffffff; /* Light text */
+}
+
+input, button, textarea {
+    padding: 10px;
+    margin: 5px 0;
+    font-size: 16px;
+    background-color: #333333; /* Darker input fields */
+    color: #ffffff; /* Light text */
+    border-radius: 4px;
+    border: 1px solid #555555;
+}
+
+button {
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: 1px solid #555555;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#button-container button {
+    width: 80%;
+    margin: 10px auto;
+    background-color: #007bff;
+    font-size: 14px;
+    padding: 12px;
+    border-radius: 5px;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+#button-container button:hover {
+    background-color: #0056b3;
+}
+
+#sidebar {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    width: 100px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #1c1c1c;
+    padding: 20px 0;
+    height: 200px;
+}
+
+#sidebar button:hover {
+    background-color: #555555;
+}
+
+#loadOlderMessages, #loadNewerMessages {
+    width: 80%;
+    margin: 10px auto;
+    background-color: #28a745;
+    font-size: 14px;
+    padding: 12px;
+    border-radius: 5px;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+#loadOlderMessages:hover, #loadNewerMessages:hover {
+    background-color: #218838;
+}
+
+#loadOlderMessages, #loadNewerMessages {
+    width: 150px;
+    background-color: #28a745;
+    font-size: 14px;
+    margin: 0;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+#offsetDisplay {
+    margin: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffffff; /* Light text */
+}
+
+#messagesContainer {
+    width: 80%;
+    max-width: 900px;
+    height: 500px;
+    overflow-y: auto;
+    border: 1px solid #555555; /* Dark border */
+    margin: 20px 0;
+    position: relative;
+    background-color: #1e1e1e; /* Dark background for message container */
+}
+
+.buffer {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    visibility: hidden;
+}
+
+#buffer1 {
+    visibility: visible;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #555555; /* Darker border */
+    color: #ffffff; /* Light text */
+}
+
+/* Message form */
+#messageForm {
+    width: 80%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#message {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #555555; /* Dark border */
+    background-color: #333333; /* Darker textarea background */
+    color: #ffffff; /* Light text */
+}
+
+#messageForm button {
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    width: 100px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #messagesContainer {
+        width: 95%;
+        height: 400px;
+    }
+
+    #sidebar {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+    }
+
+    #messageForm {
+        width: 95%;
+    }
+}
+
+
+    </style>
+</head>
+<body>
+    <h1 id="selected">select server</h1>
+
+    <!-- Message sending form -->
+    
+    <div id="l-sidebar">
+        <div id="button-container"></div>
+        <div id="bottom">
+            <a href="settings.html">settings</a>
+            <button id="logout_button">Log Out</button>
+        </div>   
+    </div>
+
+    <div id="offsetDisplay">Offset: 0</div>
+
+    <!-- Buttons to change offset -->
+    <div id="sidebar">
+        <button id="loadNewerMessages">↑</button>
+        <button id="loadOlderMessages">↓</button>
+    </div>
+
+
+    <!-- Message display table -->
+    <div id="messagesContainer">
+        <div id="buffer1" class="buffer">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Message</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Messages will go here -->
+                </tbody>
+            </table>
+        </div>
+        <div id="buffer2" class="buffer">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Message</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Messages will go here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <form id="messageForm">
+        <textarea id="message" name="message" required></textarea>
+        <button type="submit">send</button>
+    </form>
+
+    <script>
+        document.getElementById('logout_button').addEventListener('click', logout_syncrounous);
+
+        const sessionToken = localStorage.getItem('session_token');
+        let offset = 0; // Initialize offset as 0
+        let previousMessages = []; // Store the previous set of messages
+        let server_id = 0;
+
+
+        // Function to fetch messages based on offset and display them █████████████████████████████████████████
+        function fetchMessages() {
+            const serverId = server_id;
+
+            // Get session token from localStorage
+            const sessionToken = localStorage.getItem('session_token');
+            if (!sessionToken) {
+                document.getElementById('apiResponse').innerHTML = "<tr><td colspan='2'>Error: No session token found. Please login first.</td></tr>";
+                return;
+            }
+
+            const requestData = {
+                session_token: sessionToken,
+                server_id: serverId,
+                offset: offset,
+                amount: 10
+            };
+
+            fetch('api.php?action=get_messages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${sessionToken}`
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => response.json())
+            .then(messages => {
+                const messagesReversed = messages.reverse(); // Reverse the order of messages
+                if (JSON.stringify(messagesReversed) !== JSON.stringify(previousMessages)) {
+                    previousMessages = messagesReversed; // Update previous messages
+                    displayMessages(messagesReversed); // Display new data if it's different
+                }
+            })
+            .catch(error => {
+                document.getElementById('apiResponse').innerHTML = "<tr><td colspan='2'>Error: " + error.message + "</td></tr>";
+            });
+        }
+
+        // Function to display messages in a table with username and message ███████████████████████████████████
+        function displayMessages(messages) {
+            const buffer1 = document.querySelector('#buffer1 tbody');
+            const buffer2 = document.querySelector('#buffer2 tbody');
+
+            // Step 1: Clear the back buffer (buffer2) before writing new data
+            buffer2.innerHTML = '';
+
+            // Step 2: Create message rows and write them to the back buffer (buffer2)
+            const rows = messages.map(messageData => {
+                const messageObj = JSON.parse(messageData);
+
+                // Fetch the username from the user ID
+                return fetch(`api.php?action=get_username&user_id=${messageObj.user_id}`)
+                    .then(response => response.json())
+                    .then(userData => {
+                        return `<tr><td>${userData.username}(${messageObj.user_id})</td><td>${messageObj.message}</td></tr>`;
+                    });
+            });
+
+            // Wait for all promises to resolve
+            Promise.all(rows)
+                .then(rowsHtml =>
+                {
+                    // Step 3: Make the front buffer (buffer1) invisible
+                    buffer1.style.visibility = 'hidden';
+
+                    // Step 4: Clear the front buffer (buffer1)
+                    buffer1.innerHTML = '';
+
+                    // Step 5: Write the same data that was written to the back buffer (buffer2) to the front buffer (buffer1)
+                    buffer1.innerHTML = rowsHtml.join('');
+
+                    // Step 6: Make the front buffer (buffer1) visible
+                    buffer1.style.visibility = 'visible';
+                })
+                .catch(error => {
+                    console.error('Error fetching usernames:', error);
+                });
+        }
+
+
+
+        
+        // Event listener for loading older messages (decrease offset) █████████████████████████████████████████
+        document.getElementById('loadOlderMessages').addEventListener('click', function() {
+            if (offset > 0) {
+                offset -= 1; // Decrease the offset by 1
+                document.getElementById('offsetDisplay').textContent = `Offset: ${offset}`; // Display the updated offset
+                fetchMessages(); // Fetch previous message
+            }
+        });
+
+        
+        // Event listener for loading newer messages (increase offset) █████████████████████████████████████████
+        document.getElementById('loadNewerMessages').addEventListener('click', function() {
+            offset += 1; // Increase the offset by 1
+            document.getElementById('offsetDisplay').textContent = `Offset: ${offset}`; // Display the updated offset
+            fetchMessages(); // Fetch next message
+        });
+
+        
+        // Function to handle message posting ██████████████████████████████████████████████████████████████████
+        function handleSubmit() {
+            // Get session token from localStorage
+            const sessionToken = localStorage.getItem('session_token');
+            if (!sessionToken) {
+                document.getElementById("responseMessage").textContent = "Error: No session token found. Please login first.";
+                return;
+            }
+        
+            const messageField = document.getElementById("message"); // Get the message textarea element
+            const message = messageField.value;
+        
+            // Prepare data to send to the PHP API
+            const requestData = {
+                session_token: sessionToken,
+                server_id: server_id,
+                message: message
+            };
+        
+            fetch("api.php?action=add_message", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Clear the form after successful submission
+                messageField.value = ""; // Explicitly clear the message field
+            })
+            .catch(error => {});
+        }
+
+        // Submit form on button click
+        document.getElementById("messageForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent form from submitting normally
+            handleSubmit(); // Call the message handling function
+        });
+
+        // Submit form when Enter is pressed inside the textarea
+        document.getElementById("message").addEventListener("keydown", function(event) {
+            if (event.key === "Enter" && !event.shiftKey) { // Check for Enter key, but allow Shift+Enter for new lines
+                event.preventDefault(); // Prevent newline from being inserted
+                handleSubmit(); // Trigger form submission
+            }
+        });
+
+
+
+        function logout_syncrounous(){
+            logout();
+        }
+        // Function to handle logging out ██████████████████████████████████████████████████████████████████████
+        async function logout() {
+            // Get the session token from the input field
+            const sessionToken = localStorage.getItem('session_token');
+
+            if (!sessionToken) {
+                alert("Please enter a session token.");
+                return;
+            }
+
+            // Prepare the data to be sent
+            const data = { session_token: sessionToken };
+
+            try {
+                // Send a POST request to the logout endpoint
+                const response = await fetch('api.php?action=logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                // Parse the JSON response
+                const result = await response.json();
+
+                // Handle the HTTP response code
+                if (response.status === 200) {
+                    alert("Logout successful!");
+                } else {
+                    alert("Error: " + result.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert("An error occurred. Check console for details.");
+            }
+        }
+
+        // functiont th check for waiting messages █████████████████████████████████████████████████████████████
+        function checkForPendingMessages(sessionToken)
+        {
+            fetch('api.php?action=check_message',
+            {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({session_token: sessionToken})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.has_message) // true = has message false = doesent
+                {
+                    fetchMessages();
+                }
+            })
+            .catch(error => console.error('Error checking message status:', error));
+        }
+
+        async function fetchServers() {
+            try {
+                const response = await fetch('api.php?action=get_servers', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({session_token: sessionToken})
+                });
+            
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error("Error fetching servers:", errorData.error || "Unknown error");
+                } else {
+                    const data = await response.json();
+                    console.log("Servers fetched:", data.servers);
+                
+                    // Make sure to pass the correct string (first element of the array)
+                    createServerButtonsAndHandleSelection(data.servers[0]);
+                }
+            } catch (error) {
+                console.error("Request failed:", error);
+            }
+        }
+
+        async function createServerButtonsAndHandleSelection(serversString)
+        {
+            // Ensure serversString is a string before calling split
+            if (typeof serversString !== 'string')
+            {
+                console.error("Expected a string, but got:", typeof serversString);
+                return;
+            }
+        
+            const serverIds = serversString.split(',');
+        
+            // Fetch each server's name using the provided API
+            const serverNames = [];
+            for (const serverId of serverIds) {
+                try {
+                    const response = await fetch('api.php?action=get_server_name', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ server_id: serverId })
+                    });
+                
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.server_name) {
+                            serverNames.push({ id: serverId, name: data.server_name });
+                        } else {
+                            console.error(`Server name not found for server ID: ${serverId}`);
+                        }
+                    } else {
+                        const errorData = await response.json();
+                        console.error(`Error fetching server name for server ID: ${serverId}`, errorData);
+                    }
+                } catch (error) {
+                    console.error(`Request failed for server ID: ${serverId}`, error);
+                }
+            }
+
+            // Create buttons dynamically and handle server selection
+            const buttonContainer = document.getElementById('button-container'); // Make sure this div exists in your HTML
+            buttonContainer.innerHTML = ''; // Clear any existing buttons
+
+            serverNames.forEach(server => {
+                const button = document.createElement('button');
+                button.textContent = server.name; // Set the button text to the server name
+                button.onclick = () => {
+                    // Update the server variable when a button is clicked
+                    server_id = server.id;
+                    console.log(`Current server changed to: ${server.id}`);
+                    fetchMessages();
+
+                    const header = document.getElementById('selected');
+                    header.textContent = `${server.name}`;
+                     
+                };
+                buttonContainer.appendChild(button);
+            });
+        }
+
+        // Run the check every 5 seconds
+        setInterval(() => { checkForPendingMessages(sessionToken); }, 5000);
+
+        // Initial message fetch
+        fetchMessages();
+        fetchServers();
+    </script>
+</body>
+

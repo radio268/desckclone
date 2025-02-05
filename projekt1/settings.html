@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Change Username, Password, Create User & Create Server API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #1c1c1c; /* Dark background */
+            color: #ffffff; /* Light text */
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #1c1c1c; /* Slightly lighter dark background for container */
+            padding: 20px;
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            color: #ffffff; /* Light text */
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #ffffff; /* Light text */
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #333333; /* Darker input fields */
+            color: #ffffff; /* Light text */
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007bff; /* Dark mode button color */
+            color: #ffffff; /* Light text */
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3; /* Slightly darker on hover */
+        }
+        .error {
+            color: #ff4d4d; /* Light red for error messages */
+        }
+        .success {
+            color: #28a745; /* Green for success messages */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>SETTINGS</h1>
+    <a href="main_menu.html">go back</a>
+
+    <!-- Change Username Form -->
+    <form id="change-username-form">
+        <h2>Change Username</h2>
+        <label for="new_username">New Username:</label>
+        <input type="text" id="new_username" name="new_username" required>
+        <input type="submit" value="Change Username">
+        <div id="change-username-response"></div>
+    </form>
+
+    <!-- Change Password Form -->
+    <form id="change-password-form">
+        <h2>Change Password</h2>
+        <label for="current_password">Current Password:</label>
+        <input type="password" id="current_password" name="current_password" required>
+        <label for="new_password">New Password:</label>
+        <input type="password" id="new_password" name="new_password" required>
+        <input type="submit" value="Change Password">
+        <div id="change-password-response"></div>
+    </form>
+
+    <!-- Create User Form -->
+    <form id="create-user-form">
+        <h2>Create New User</h2>
+        <label for="new_user_username">New User Username:</label>
+        <input type="text" id="new_user_username" name="new_user_username" required>
+        <label for="new_user_password">New User Password:</label>
+        <input type="password" id="new_user_password" name="new_user_password" required>
+        <input type="submit" value="Create User">
+        <div id="create-user-response"></div>
+    </form>
+
+    <!-- Create Server Form -->
+    <form id="create-server-form">
+        <h2>Create New Server</h2>
+        <label for="server_name">Server Name:</label>
+        <input type="text" id="server_name" name="server_name" required>
+        <label for="user_list">User List (as string, e.g., [1,2,3]):</label>
+        <input type="text" id="user_list" name="user_list" required>
+        <input type="submit" value="Create Server">
+        <div id="create-server-response"></div>
+    </form>
+
+    <!-- Modify Servers Form -->
+    <form id="modify-servers-form">
+        <h2>Modify Servers to Display</h2>
+        <label for="new_servers">New Servers (as string, e.g., [1,2,3]):</label>
+        <input type="text" id="new_servers" name="new_servers" required>
+        <input type="submit" value="Modify Servers">
+        <div id="modify-servers-response"></div>
+    </form>
+
+    <!-- Get User ID Form -->
+    <form id="get-user-id-form">
+        <h2>Get User ID</h2>
+        <input type="submit" value="Get User ID">
+        <div id="get-user-id-response"></div>
+    </form>
+
+
+</div>
+
+
+<script>
+    // Retrieve session token from localStorage
+    const sessionToken = localStorage.getItem('session_token');
+
+    // Check if session token exists, if not ask for login
+    if (!sessionToken) {
+        alert("You are not logged in! Please log in first.");
+        // You can redirect the user to a login page here if necessary
+    }
+
+    // Change Username Form Submission
+    document.getElementById('change-username-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const newUsername = document.getElementById('new_username').value;
+
+        const responseElement = document.getElementById('change-username-response');
+        responseElement.innerHTML = '';
+
+        try {
+            const response = await fetch('api.php?action=change_username', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ session_token: sessionToken, new_username: newUsername })
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                responseElement.innerHTML = `<p class="success">${result.message}</p>`;
+            } else {
+                responseElement.innerHTML = `<p class="error">${result.error}</p>`;
+            }
+        } catch (error) {
+            responseElement.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+        }
+    });
+
+    // Change Password Form Submission
+    document.getElementById('change-password-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const currentPassword = document.getElementById('current_password').value;
+        const newPassword = document.getElementById('new_password').value;
+
+        const responseElement = document.getElementById('change-password-response');
+        responseElement.innerHTML = '';
+
+        try {
+            const response = await fetch('api.php?action=change_password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    session_token: sessionToken,
+                    current_password: currentPassword,
+                    new_password: newPassword
+                })
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                responseElement.innerHTML = `<p class="success">${result.message}</p>`;
+            } else {
+                responseElement.innerHTML = `<p class="error">${result.error}</p>`;
+            }
+        } catch (error) {
+            responseElement.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+        }
+    });
+
+    document.getElementById('get-user-id-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const responseElement = document.getElementById('get-user-id-response');
+        responseElement.innerHTML = '';
+
+        try {
+            const response = await fetch('api.php?action=get_user_id', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    session_token: sessionToken
+                })
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                responseElement.innerHTML = `<p class="success">User ID: ${result.user_id}</p>`;
+            } else {
+                responseElement.innerHTML = `<p class="error">${result.error}</p>`;
+            }
+        } catch (error) {
+            responseElement.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+        }
+    });
+
+    // Create User Form Submission
+    document.getElementById('create-user-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const newUserUsername = document.getElementById('new_user_username').value;
+        const newUserPassword = document.getElementById('new_user_password').value;
+
+        const responseElement = document.getElementById('create-user-response');
+        responseElement.innerHTML = '';
+
+        try {
+            const response = await fetch('api.php?action=create_user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    session_token: sessionToken,
+                    username: newUserUsername,
+                    password: newUserPassword
+                })
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                responseElement.innerHTML = `<p class="success">${result.message}</p>`;
+            } else {
+                responseElement.innerHTML = `<p class="error">${result.error}</p>`;
+            }
+        } catch (error) {
+            responseElement.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+        }
+    });
+
+
+    // Create Server Form Submission
+    document.getElementById('create-server-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        
+        const serverName = document.getElementById('server_name').value;
+        const userList = document.getElementById('user_list').value;
+        
+        const responseElement = document.getElementById('create-server-response');
+        responseElement.innerHTML = '';
+        
+        try {
+            const response = await fetch('api.php?action=create_server', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    session_token: sessionToken,
+                    name: serverName,
+                    user_list: userList
+                })
+            });
+        
+            const result = await response.json();
+            if (response.ok) {
+                // Show the server ID in the success message
+                responseElement.innerHTML = `<p class="success">Server created successfully! Server ID: ${result.server_id}</p>`;
+            } else {
+                responseElement.innerHTML = `<p class="error">${result.error}</p>`;
+            }
+        } catch (error) {
+            responseElement.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', async function() {
+        const responseElement = document.getElementById('modify-servers-response');
+        const newServersInput = document.getElementById('new_servers');
+
+        try {
+            // Fetch the current servers when the page loads
+            const response = await fetch('api.php?action=get_servers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    session_token: sessionToken
+                })
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                // Populate the input field with the current servers value
+                newServersInput.value = result.servers.join(',');  // Assuming it's an array of server IDs
+            } else {
+                responseElement.innerHTML = `<p class="error">${result.error}</p>`;
+            }
+        } catch (error) {
+            responseElement.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+        }
+    });
+
+    document.getElementById('modify-servers-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+    
+        const newServers = document.getElementById('new_servers').value;
+        const responseElement = document.getElementById('modify-servers-response');
+        responseElement.innerHTML = '';
+    
+        try {
+            const response = await fetch('api.php?action=change_servers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    session_token: sessionToken,
+                    new_servers: newServers
+                })
+            });
+        
+            const result = await response.json();
+            if (response.ok) {
+                responseElement.innerHTML = `<p class="success">Servers updated successfully!</p>`;
+            } else {
+                responseElement.innerHTML = `<p class="error">${result.error}</p>`;
+            }
+        } catch (error) {
+            responseElement.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+        }
+    });
+</script>
+
+</body>
+</html>

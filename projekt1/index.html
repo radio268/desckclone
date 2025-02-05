@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOGIN</title>
+    <style>
+        body {
+            font-family: "Courier New", Courier, monospace;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Ensures full viewport height */
+            overflow: hidden;
+            font-weight: 600;
+        }
+
+        /* Full-screen background with # characters */
+        #background {
+            font-family: "Courier New", Courier, monospace;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgb(218, 218, 218); /* Optional color */
+            white-space: pre;
+            z-index: -1; /* Ensures it's behind the content */
+            font-weight: 600;
+        }
+
+        input {
+            font-family: "Courier New", Courier, monospace;
+            font-weight: 600;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            font-size: 14px;
+
+        }
+
+        button {
+            font-family: "Courier New", Courier, monospace;
+            font-weight: 600;
+            width: 100%;
+            padding: 10px;
+            background-color: #57a8fa;
+            color: #fff;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            font-family: "Courier New", Courier, monospace;
+            font-weight: 600;
+            background-color: #0080ff;
+        }
+
+        .container {
+            font-family: "Courier New", Courier, monospace;
+            position: relative;
+            background-color: rgba(218, 218, 218); /* Semi-transparent background */
+            padding: 20px;
+            width: 710px;
+            height: 480px;
+            text-align: center;
+            z-index: 1; /* Makes sure the container appears on top */
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background filled with # characters -->
+    <div id="background"></div>
+
+    <!-- Content container -->
+    <div class="container">
+        <h1>LOGIN</h1>
+        <form id="form">
+            <input  type="text"     id="username" placeholder="username" required><br>
+            <input  type="password" id="password" placeholder="password" required><br><br>
+            <button type="submit">Login</button>
+        </form>
+        <p>if you dont have username and pasword contact: go fuck yourself</p>
+    </div>
+
+    <script>
+        // Function to fill the div with # characters
+        function fillWithHashes() {
+            const background = document.getElementById('background');
+            const width = background.clientWidth;
+            const height = background.clientHeight;
+            numColumns = Math.floor(width / 10);
+            numRows = Math.floor(height / 20);
+            let hashBackground = '';
+            numRows = numRows + 15;
+            numColumns = numColumns + 15;
+            for (let i = 0; i < numRows; i++) {
+                hashBackground += '#'.repeat(numColumns) + '\n'; 
+            }
+            background.textContent = hashBackground; 
+        }
+        window.onload = fillWithHashes;
+        window.onresize = fillWithHashes; 
+
+
+
+        document.getElementById('form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            callApi(username, password)
+                .then(response => {
+                    // Handle response from the API
+                    // For now, just display the message (you can further process this response)
+                    if (response) {
+
+                    }
+                });
+        });
+
+        // Modified callApi function to save session token and redirect
+        async function callApi(username, password) {
+            try {
+                const response = await fetch('api.php?action=login', {  // Adjust the path if needed
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                if (data.session_token) {
+                    // Save the session token in localStorage
+                    localStorage.setItem('session_token', data.session_token);
+                    
+                    // Redirect the user to the application page
+                    window.location.href = 'main_menu.html';  // Adjust this to the actual application page
+                } else if (data.error) {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                console.error('API call failed:', error);
+                alert('An error occurred: ' + error.message);
+            }
+        }
+    </script>
+    </script>
+
+</body>
+</html>
