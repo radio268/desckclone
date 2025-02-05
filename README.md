@@ -13,16 +13,16 @@ This is a simplified Discord clone with a few differences:
   PHP server MYsql DB
   
 # How to Use
-__ As an Admin: __ <br>
+**As an Admin:** <br>
   Upload the SQL structure, and in the PHP script, modify the username and
   password for accessing the database. Then start creating users.
-  first autocreated acount __ username: admin password: test __ <br>
+  first autocreated acount **username: admin password: test** <br>
   ![db structure](images/db.bmp)<br>
-__ As a User: __ <br>
+**As a User:** <br>
   Ask someone to create an account for you, then use that username and
   password to log in (it is recommended to change the password afterward). Modify
   your server list if there are servers you were added to, or create your own server.
-  You can also add another user.<bbr>
+  You can also add another user.<br>
   
 # How It Works
 There is an API that supports many actions, including:
